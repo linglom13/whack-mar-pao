@@ -3,9 +3,9 @@ document.addEventListener("touchstart", function() {}, false);
 
 // 🛠️ 1. Create a dictionary map to store all three decoded audio buffers
 const gameAudioBuffers = {
-  stick1-audio: null,
-  stick2-audio: null,
-  broom-audio: null
+  stick1Audio: null,
+  stick2Audio: null,
+  broomAudio: null
 };
 
 const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -24,9 +24,9 @@ function loadGameSound(key, url) {
 }
 
 // 🛠️ 3. Trigger individual assets downloads (Replace URLs with your custom mp3 files if needed!)
-loadGameSound("stick1-audio", "audio/hit1.mp3");
-loadGameSound("stick2-audio", "audio/hit2.mp3"); 
-loadGameSound("broom-audio", "audio/hit3.mp3"); 
+loadGameSound("stick1Audio", "audio/hit1.mp3");
+loadGameSound("stick2Audio", "audio/hit2.mp3"); 
+loadGameSound("broomAudio", "audio/hit3.mp3"); 
 
 // Fix iPad Safari audio lockout policy
 function unlockAudio() {
@@ -245,7 +245,7 @@ function bonk(e) {
 		this.style.backgroundImage = "url('" + this.dataset.stick1Url + "')";
 
 		// 🛠️ Trigger the matching sound context dynamically (hammer or sword)
-		playSound(stick1-audio, 0.5);
+		playSound(stick1Audio, 0.5);
 		/*const hitSound = document.getElementById("hit1-sound");
 		hitSound.volume = 0.5; 
 		hitSound.currentTime = 0; // Rewinds to the start so it can play instantly on rapid clicks
@@ -255,7 +255,7 @@ function bonk(e) {
 		this.style.backgroundImage = "url('" + this.dataset.stick2Url + "')";
 
 		// 🛠️ Trigger the matching sound context dynamically (hammer or sword)
-		playSound(stick2-audio, 0.5);
+		playSound(stick2Audio, 0.5);
 		/*const hitSound = document.getElementById("hit2-sound");
 		hitSound.volume = 0.5; 
 		hitSound.currentTime = 0; // Rewinds to the start so it can play instantly on rapid clicks
@@ -265,7 +265,7 @@ function bonk(e) {
 		this.style.backgroundImage = "url('" + this.dataset.broomUrl + "')";
 
 	  	// 🛠️ Trigger the matching sound context dynamically (hammer or sword)
-		playSound(broom-audio, 0.3);
+		playSound(broomAudio, 0.3);
 		/*const hitSound = document.getElementById("hit3-sound");
 		hitSound.volume = 0.3; 
 		hitSound.currentTime = 0; // Rewinds to the start so it can play instantly on rapid clicks
