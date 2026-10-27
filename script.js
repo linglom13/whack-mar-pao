@@ -84,7 +84,14 @@ const moleTypes = [
 	hitStick1: 'images/mole3-hit-stick1.png',
 	hitStick2: 'images/mole3-hit-stick2.png',
 	hitBroom: 'images/mole3-hit-broom.png'
+  },
+  {
+	normal: 'images/mole4.png',
+	hitStick1: 'images/mole4-hit-stick1.png',
+	hitStick2: 'images/mole4-hit-stick2.png',
+	hitBroom: 'images/mole4-hit-broom.png'
   }
+	
 ];
 
 // Weapon parameters asset system mapping
