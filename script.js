@@ -1,6 +1,60 @@
 // Add this line at the top of script.js to unlock Safari touch states
 document.addEventListener("touchstart", function() {}, false);
 
+// 🛠️ 1. Create a dictionary map to store all three decoded audio buffers
+const gameAudioBuffers = {
+  stick1-audio: null,
+  stick2-audio: null,
+  broom-audio: null
+};
+
+const AudioContext = window.AudioContext || window.webkitAudioContext;
+const audioCtx = new AudioContext();
+
+// 🛠️ 2. Helper function to fetch and load individual audio channels into memory
+function loadGameSound(key, url) {
+  fetch(url)
+    .then(response => response.arrayBuffer())
+    .then(data => audioCtx.decodeAudioData(data))
+    .then(buffer => {
+      gameAudioBuffers[key] = buffer;
+      console.log(`Audio Loaded successfully: ${key}`);
+    })
+    .catch(err => console.log(`Audio load error [${key}]:`, err));
+}
+
+// 🛠️ 3. Trigger individual assets downloads (Replace URLs with your custom mp3 files if needed!)
+loadGameSound("stick1-audio", "audio/hit1.mp3");
+loadGameSound("stick2-audio", "audio/hit2.mp3"); 
+loadGameSound("broom-audio", "audio/hit3.mp3"); 
+
+// Fix iPad Safari audio lockout policy
+function unlockAudio() {
+  if (audioCtx.state === "suspended") {
+    audioCtx.resume();
+  }
+}
+window.addEventListener("click", unlockAudio);
+window.addEventListener("touchstart", unlockAudio);
+
+// 🛠️ 4. Global reusable play function to trigger any loaded asset by name
+function playSound(key, volume = 0.3) {
+  const activeBuffer = gameAudioBuffers[key];
+  
+  if (activeBuffer && audioCtx) {
+    const soundSource = audioCtx.createBufferSource();
+    soundSource.buffer = activeBuffer;
+    
+    const gainNode = audioCtx.createGain();
+    gainNode.gain.value = volume; // Dynamic volume controller
+    
+    soundSource.connect(gainNode);
+    gainNode.connect(audioCtx.destination);
+    
+    soundSource.start(0); // Plays instantly and safely registers concurrent overlapping clicks
+  }
+}
+
 const holes = document.querySelectorAll(".hole");
 const scoreBoard = document.getElementById("score");
 const timeLeftDisplay = document.getElementById("time-left");
@@ -190,26 +244,32 @@ function bonk(e) {
   if (chosenWeapon === "ไม้ตีสุนัข") {
 		this.style.backgroundImage = "url('" + this.dataset.stick1Url + "')";
 
-		const hitSound = document.getElementById("hit1-sound");
+		// 🛠️ Trigger the matching sound context dynamically (hammer or sword)
+		playSound(stick1-audio, 0.5);
+		/*const hitSound = document.getElementById("hit1-sound");
 		hitSound.volume = 0.5; 
 		hitSound.currentTime = 0; // Rewinds to the start so it can play instantly on rapid clicks
-		hitSound.play();
+		hitSound.play();*/
   
   } else if (chosenWeapon === "ก้านมะยม") {
 		this.style.backgroundImage = "url('" + this.dataset.stick2Url + "')";
-		
-		const hitSound = document.getElementById("hit2-sound");
+
+		// 🛠️ Trigger the matching sound context dynamically (hammer or sword)
+		playSound(stick2-audio, 0.5);
+		/*const hitSound = document.getElementById("hit2-sound");
 		hitSound.volume = 0.5; 
 		hitSound.currentTime = 0; // Rewinds to the start so it can play instantly on rapid clicks
-		hitSound.play();
+		hitSound.play();*/
 		
   } else {
 		this.style.backgroundImage = "url('" + this.dataset.broomUrl + "')";
-		
-		const hitSound = document.getElementById("hit3-sound");
+
+	  	// 🛠️ Trigger the matching sound context dynamically (hammer or sword)
+		playSound(broom-audio, 0.3);
+		/*const hitSound = document.getElementById("hit3-sound");
 		hitSound.volume = 0.3; 
 		hitSound.currentTime = 0; // Rewinds to the start so it can play instantly on rapid clicks
-		hitSound.play();
+		hitSound.play();*/
   }
   
   this.style.pointerEvents = "none";
