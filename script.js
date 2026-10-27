@@ -3,9 +3,9 @@ document.addEventListener("touchstart", function() {}, false);
 
 // 🛠️ 1. Create a dictionary map to store all three decoded audio buffers
 const gameAudioBuffers = {
-  stick1Audio: null,
-  stick2Audio: null,
-  broomAudio: null
+  ไม้ตีสุนัข: null,
+  ก้านมะยม: null,
+  ไม้กวาด: null
 };
 
 const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -24,9 +24,9 @@ function loadGameSound(key, url) {
 }
 
 // 🛠️ 3. Trigger individual assets downloads (Replace URLs with your custom mp3 files if needed!)
-loadGameSound("stick1Audio", "audio/hit1.mp3");
-loadGameSound("stick2Audio", "audio/hit2.mp3"); 
-loadGameSound("broomAudio", "audio/hit3.mp3"); 
+loadGameSound("ไม้ตีสุนัข", "audio/hit1.mp3");
+loadGameSound("ก้านมะยม", "audio/hit2.mp3"); 
+loadGameSound("ไม้กวาด", "audio/hit3.mp3"); 
 
 // Fix iPad Safari audio lockout policy
 function unlockAudio() {
