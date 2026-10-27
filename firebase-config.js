@@ -84,7 +84,15 @@ onValue(recentMatchesQuery, (snapshot) => {
   // สร้างแถวประวัติผู้เล่น 10 นัดล่าสุด
   recentDataList.forEach((data) => {
     const date = new Date(data.timestamp).toLocaleTimeString();
-    let weaponText = data.weapon === "hammer" ? "🛠️ ค้อน" : "⚔️ ดาบ";
+    // ตรวจสอบประเภทอาวุธเพื่อเลือกไอคอนและข้อความภาษาไทย
+    let weaponText = "";
+    if (data.weapon === "ไม้ตีสุนัข") {
+    	weaponText = "ไม้ตีสุนัข";
+    } else if (data.weapon === "ก้านมะยม") {
+    	weaponText = "ก้านมะยม";
+    } else {
+    	weaponText = data.weapon || "ไม่ได้ระบุ";
+    }
 
     htmlResult += `
       <div style="padding: 8px 0; border-bottom: 1px solid #444; font-size: 0.9rem; display: flex; justify-content: space-between; align-items: center;">
