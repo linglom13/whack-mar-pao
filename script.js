@@ -122,7 +122,7 @@ function peep() {
 function startGame() {
   score = 0;
   totalClicks = 0; // รีเซ็ตจำนวนครั้งที่ตี
-  timeLeft = 20;
+  timeLeft = 10;
   timeUp = false;
   
   scoreBoard.textContent = score;
