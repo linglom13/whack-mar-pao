@@ -45,7 +45,7 @@ body.game-active.weapon-ไม้ตีสุนัข:active .game-weapon, body
 
 /* Stick2 striking rotation animation frame */
 body.game-active.weapon-ก้านมะยม:active .game-weapon, body.game-active.weapon-ก้านมะยม.striking .game-weapon {
-	transform: translate(20px, 45px) rotate(65deg);
+	transform: translate(20px, 45px) rotate(45deg);
 }
 
 /* Sword slashing rotation animation frame */
