@@ -1,23 +1,3 @@
-// ดึงฟังก์ชันที่จำเป็นจาก Firebase SDK ตรงตาม Connection ที่กำหนด
-import { initializeApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
-import { getDatabase, ref, push, onValue, query, limitToLast } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-database.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyCdNAeQyUHsOuevZOb29r7Ok2zEkv276BU",
-  authDomain: "my-simple-games.firebaseapp.com",
-  projectId: "my-simple-games",
-  storageBucket: "my-simple-games.firebasestorage.app",
-  messagingSenderId: "148777694804",
-  appId: "1:148777694804:web:e57cc24cdd958dcb3d9fc1",
-  databaseURL: "https://my-simple-games-default-rtdb.asia-southeast1.firebasedatabase.app" 
-};
-
-// เริ่มต้นใช้งาน Firebase
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-const whackMarPaoRef = ref(db, "whackMarPao");
-
-
 const holes = document.querySelectorAll(".hole");
 const scoreBoard = document.getElementById("score");
 const timeLeftDisplay = document.getElementById("time-left");
@@ -27,7 +7,6 @@ const moles = document.querySelectorAll(".mole");
 const setupPanel = document.getElementById("setup-panel");
 const controlsPanel = document.getElementById("controls-panel");
 const weaponElement = document.getElementById("weapon-element");
-const historyList = document.getElementById("history-list");
 
 // Database configuration matrix for mole variations
 const moleTypes = [
@@ -155,13 +134,10 @@ function startGame() {
       
       holes.forEach(hole => hole.classList.remove("up"));
 
-      // บันทึกค่าลง Firebase Realtime Database
-      push(whackMarPaoRef, {
-    	score: score,
-    	totalClicks: totalClicks, // ค่านี้จะกลายเป็นจำนวนครั้งที่ตีโดนตามที่เราแก้ไปก่อนหน้า
-   		weapon: chosenWeapon,     // บันทึกค่าอาวุธที่ใช้ (hammer หรือ sword)
-    	timestamp: Date.now()
-      });
+      // 🛠️ จุดสำคัญ: เรียกใช้ฟังก์ชันที่แชร์มาจากไฟล์ข้ามโมดูลเพื่อบันทึกประวัติลงฐานข้อมูล
+      if (typeof window.saveMatchHistory === "function") {
+        window.saveMatchHistory(score, totalClicks, chosenWeapon);
+      }
 		
       alert("Game Over! Final Score with " + chosenWeapon.toUpperCase() + ": " + score);
     }
@@ -179,7 +155,7 @@ function resetToMenu() {
   // 2. Clear out game state tracking data sets
   score = 0;
   totalClicks = 0;
-  timeLeft = 20;
+  timeLeft = 10;
   scoreBoard.textContent = score;
   timeLeftDisplay.textContent = timeLeft;
 
@@ -240,56 +216,3 @@ function bonk(e) {
 }
 
 moles.forEach(mole => mole.addEventListener("click", bonk));
-
-// --- ส่วนดึงข้อมูลแสดงผลหน้าแรก (ดึง 10 รายการล่าสุด) ---
-const recentScoresQuery = query(whackMarPaoRef, limitToLast(10));
-
-onValue(recentScoresQuery, (snapshot) => {
-  if (!snapshot.exists()) {
-    historyList.innerHTML = "<div style='color: #aaa;'>No match history found.</div>";
-    return;
-  }
-
-  let htmlResult = "";
-  const dataList = [];
-
-  // วนลูปเก็บข้อมูลจาก Firebase เข้า Array
-  snapshot.forEach((childSnapshot) => {
-    dataList.push(childSnapshot.val());
-  });
-
-  // พลิกกลับเอาข้อมูลล่าสุดขึ้นมาแสดงด้านบน (Reverse Array)
-  dataList.reverse();
-
-  // สร้างโครงสร้าง HTML แสดงผล
-  dataList.forEach((data) => {
-    const date = new Date(data.timestamp).toLocaleTimeString();
-
-    // ตรวจสอบประเภทอาวุธเพื่อเลือกไอคอนและข้อความภาษาไทย
-     let weaponText = "";
-    if (data.weapon === "ไม้ตีสุนัข") {
-    	weaponText = "ไม้ตีสุนัข";
-    } else if (data.weapon === "ก้านมะยม") {
-    	weaponText = "ก้านมะยม";
-    } else {
-    	weaponText = data.weapon || "ไม่ได้ระบุ";
-    }
-	  
-    htmlResult += `
-    <div style="padding: 8px 0; border-bottom: 1px solid #444; font-size: 0.9rem; display: flex; justify-content: space-between; align-items: center;">
-      <div>
-        <strong>[${date}]</strong> 
-        <span style="background: rgba(255,255,255,0.15); padding: 2px 8px; border-radius: 5px; margin-left: 5px;">
-          ${weaponText}
-        </span>
-      </div>
-      <div>
-        <span style="color: #00e676; margin-right: 10px;">🏆 คะแนน: <strong>${data.score}</strong></span>
-        <span style="color: #ff9800;">💥 ตีโดน: <strong>${data.totalClicks}</strong> ครั้ง</span>
-      </div>
-    </div>
-  `;
-});
-
-  historyList.innerHTML = htmlResult;
-});
