@@ -41,8 +41,17 @@ onValue(recentScoresQuery, (snapshot) => {
   let htmlResult = "";
   const dataList = [];
 
+  // 🛠️ เพิ่มตัวแปรสำหรับสะสมแต้มรวมทั้งหมด
+  let aggregateScore = 0;
+  let aggregateHits = 0;
+  
   snapshot.forEach((childSnapshot) => {
-    dataList.push(childSnapshot.val());
+    const data = childSnapshot.val();
+    dataList.push(data);
+    
+    // คำนวณบวกสะสมค่าจากทุกรายการที่ดึงมา
+    if (data.score) aggregateScore += Number(data.score);
+    if (data.totalClicks) aggregateHits += Number(data.totalClicks);
   });
 
   dataList.reverse(); // เรียงจากรายการล่าสุดไว้ด้านบนสุด
@@ -74,6 +83,17 @@ onValue(recentScoresQuery, (snapshot) => {
       </div>
     `;
   });
+
+  // 2. 🛠️ สร้างแถวพิเศษสรุปผลรวม (Total Summary) ไว้ที่บรรทัดล่างสุด
+  htmlResult += `
+    <div style="padding: 12px 0 4px 0; margin-top: 5px; font-size: 0.95rem; display: flex; justify-content: space-between; align-items: center; border-top: 2px dashed #888; font-weight: bold; background: rgba(255, 255, 255, 0.05); border-radius: 0 0 10px 10px;">
+      <div style="margin-left: 5px; color: #e0e0e0;">📊 สรุปยอดรวม (Total):</div>
+      <div>
+        <span style="color: #26ff91; margin-right: 10px; text-shadow: 0 0 5px rgba(38,255,145,0.4);">🏆 คะแนนรวม: ${aggregateScore}</span>
+        <span style="color: #ffb74d; margin-right: 5px; text-shadow: 0 0 5px rgba(255,183,77,0.4);">💥 ตีโดนรวม: ${aggregateHits} ครั้ง</span>
+      </div>
+    </div>
+  `;
 
   historyList.innerHTML = htmlResult;
 });
