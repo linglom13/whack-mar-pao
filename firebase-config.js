@@ -1,15 +1,15 @@
-// โหลดฟังก์ชันจาก Firebase Web SDK
-import { initializeApp } from "https://gstatic.com";
-import { getDatabase, ref, push, onValue, query, limitToLast } from "https://gstatic.com";
+// ดึงฟังก์ชันที่จำเป็นจาก Firebase SDK ตรงตาม Connection ที่กำหนด
+import { initializeApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
+import { getDatabase, ref, push, onValue, query, limitToLast } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-database.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCdNAeQyUHsOuevZOb29r7Ok2zEkv276BU",
-  authDomain: "://firebaseapp.com",
+  authDomain: "my-simple-games.firebaseapp.com",
   projectId: "my-simple-games",
   storageBucket: "my-simple-games.firebasestorage.app",
   messagingSenderId: "148777694804",
   appId: "1:148777694804:web:e57cc24cdd958dcb3d9fc1",
-  databaseURL: "https://firebasedatabase.app" 
+  databaseURL: "https://my-simple-games-default-rtdb.asia-southeast1.firebasedatabase.app" 
 };
 
 // เริ่มต้นใช้งานระบบฐานข้อมูล
