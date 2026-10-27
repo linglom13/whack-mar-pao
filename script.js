@@ -245,7 +245,7 @@ function bonk(e) {
 		this.style.backgroundImage = "url('" + this.dataset.stick1Url + "')";
 
 		// 🛠️ Trigger the matching sound context dynamically (hammer or sword)
-		playSound(stick1Audio, 0.5);
+		playSound(chosenWeapon, 0.5);
 		/*const hitSound = document.getElementById("hit1-sound");
 		hitSound.volume = 0.5; 
 		hitSound.currentTime = 0; // Rewinds to the start so it can play instantly on rapid clicks
@@ -255,7 +255,7 @@ function bonk(e) {
 		this.style.backgroundImage = "url('" + this.dataset.stick2Url + "')";
 
 		// 🛠️ Trigger the matching sound context dynamically (hammer or sword)
-		playSound(stick2Audio, 0.5);
+		playSound(chosenWeapon, 0.5);
 		/*const hitSound = document.getElementById("hit2-sound");
 		hitSound.volume = 0.5; 
 		hitSound.currentTime = 0; // Rewinds to the start so it can play instantly on rapid clicks
@@ -265,7 +265,7 @@ function bonk(e) {
 		this.style.backgroundImage = "url('" + this.dataset.broomUrl + "')";
 
 	  	// 🛠️ Trigger the matching sound context dynamically (hammer or sword)
-		playSound(broomAudio, 0.3);
+		playSound(chosenWeapon, 0.3);
 		/*const hitSound = document.getElementById("hit3-sound");
 		hitSound.volume = 0.3; 
 		hitSound.currentTime = 0; // Rewinds to the start so it can play instantly on rapid clicks
