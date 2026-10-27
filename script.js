@@ -1,3 +1,23 @@
+// ดึงฟังก์ชันที่จำเป็นจาก Firebase SDK ตรงตาม Connection ที่กำหนด
+import { initializeApp } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-app.js";
+import { getDatabase, ref, push, onValue, query, limitToLast } from "https://www.gstatic.com/firebasejs/13.1.0/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCdNAeQyUHsOuevZOb29r7Ok2zEkv276BU",
+  authDomain: "my-simple-games.firebaseapp.com",
+  projectId: "my-simple-games",
+  storageBucket: "my-simple-games.firebasestorage.app",
+  messagingSenderId: "148777694804",
+  appId: "1:148777694804:web:e57cc24cdd958dcb3d9fc1",
+  databaseURL: "https://my-simple-games-default-rtdb.asia-southeast1.firebasedatabase.app" 
+};
+
+// เริ่มต้นใช้งาน Firebase
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const whackMarPaoRef = ref(db, "whackMarPao");
+
+
 const holes = document.querySelectorAll(".hole");
 const scoreBoard = document.getElementById("score");
 const timeLeftDisplay = document.getElementById("time-left");
@@ -7,6 +27,7 @@ const moles = document.querySelectorAll(".mole");
 const setupPanel = document.getElementById("setup-panel");
 const controlsPanel = document.getElementById("controls-panel");
 const weaponElement = document.getElementById("weapon-element");
+const historyList = document.getElementById("history-list");
 
 // Database configuration matrix for mole variations
 const moleTypes = [
@@ -41,6 +62,7 @@ let chosenWeapon = "ไม้ตีสุนัข";
 let lastHole;
 let timeUp = false;
 let score = 0;
+let totalClicks = 0; // ตัวแปรเก็บจำนวนครั้งที่ตีทั้งหมดในรอบนั้น
 let countdown;
 let peepTimeout;
 let timeLeft = 20;
@@ -50,6 +72,16 @@ let currentMoleConfig = null;
 window.addEventListener("mousemove", (e) => {
   weaponElement.style.left = e.clientX + "px";
   weaponElement.style.top = e.clientY + 'px';
+});
+
+// นับจำนวนครั้งที่ผู้เล่นเหวี่ยงอาวุธตี (ไม่ว่าจะโดนตุ่นหรือไม่ก็ตาม)
+window.addEventListener("click", (e) => {
+  if (document.body.classList.contains("game-active") && e.isTrusted) {
+    // ป้องกันการนับเบิ้ลหากกดโดนปุ่ม Back
+    if (!e.target.classList.contains("back-btn")) {
+      totalClicks++;
+    }
+  }
 });
 
 function selectWeapon(weaponType, element) {
@@ -99,6 +131,7 @@ function peep() {
 
 function startGame() {
   score = 0;
+  totalClicks = 0; // รีเซ็ตจำนวนครั้งที่ตี
   timeLeft = 20;
   timeUp = false;
   
@@ -136,6 +169,7 @@ function startGame() {
     }
   }, 1000);
 }
+window.startGame = startGame; // เปิดให้ HTML เรียกใช้ได้
 
 // ---> ADD THIS FUNCTION ANYWHERE IN SCRIPT.JS <---
 function resetToMenu() {
@@ -146,6 +180,7 @@ function resetToMenu() {
 
   // 2. Clear out game state tracking data sets
   score = 0;
+  totalClicks = 0;
   timeLeft = 20;
   scoreBoard.textContent = score;
   timeLeftDisplay.textContent = timeLeft;
@@ -162,6 +197,7 @@ function resetToMenu() {
   setupPanel.style.display = "inline-block";
   controlsPanel.style.display = "none";
 }
+window.resetToMenu = resetToMenu; // เปิดให้ HTML เรียกใช้ได้
 
 function bonk(e) {
   if(!e.isTrusted) return; 
@@ -204,3 +240,38 @@ function bonk(e) {
 }
 
 moles.forEach(mole => mole.addEventListener("click", bonk));
+
+// --- ส่วนดึงข้อมูลแสดงผลหน้าแรก (ดึง 10 รายการล่าสุด) ---
+const recentScoresQuery = query(whackMarPaoRef, limitToLast(10));
+
+onValue(recentScoresQuery, (snapshot) => {
+  if (!snapshot.exists()) {
+    historyList.innerHTML = "<div style='color: #aaa;'>No match history found.</div>";
+    return;
+  }
+
+  let htmlResult = "";
+  const dataList = [];
+
+  // วนลูปเก็บข้อมูลจาก Firebase เข้า Array
+  snapshot.forEach((childSnapshot) => {
+    dataList.push(childSnapshot.val());
+  });
+
+  // พลิกกลับเอาข้อมูลล่าสุดขึ้นมาแสดงด้านบน (Reverse Array)
+  dataList.reverse();
+
+  // สร้างโครงสร้าง HTML แสดงผล
+  dataList.forEach((data) => {
+    const date = new Date(data.timestamp).toLocaleTimeString();
+    htmlResult += `
+      <div style="padding: 5px 0; border-bottom: 1px solid #444; font-size: 0.9rem;">
+        <strong>[${date}]</strong> อาวุธ: ${data.weapon} | 
+        <span style="color: #00e676;">คะแนน: ${data.score}</span> | 
+        <span style="color: #ff9800;">จำนวนที่ตี: ${data.totalClicks}</span>
+      </div>
+    `;
+  });
+
+  historyList.innerHTML = htmlResult;
+});
