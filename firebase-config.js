@@ -27,6 +27,96 @@ window.saveMatchHistory = function(finalScore, hitCount, weaponType) {
   });
 };
 
+// --- 🗲 ชุดที่ 1: ดึงข้อมูลทั้งหมดในฐานข้อมูล เพื่อคำนวณยอดรวมสุทธิมาโชว์ใต้ <h1> ---
+onValue(whackMarPaoRef, (snapshot) => {
+  const totalHitsBanner = document.getElementById("total-hits-banner");
+  if (!totalHitsBanner) return;
+
+  if (!snapshot.exists()) {
+    totalHitsBanner.innerHTML = "💥 ตีโดนรวม 0 ครั้ง";
+    return;
+  }
+
+  let totalDatabaseHits = 0;
+
+  // วนลูปสแกนประวัติทุกแมตช์ที่มีอยู่ทั้งหมดในระบบตั้งแต่อดีตจนถึงปัจจุบัน
+  snapshot.forEach((childSnapshot) => {
+    const data = childSnapshot.val();
+    if (data.totalClicks) {
+      totalDatabaseHits += Number(data.totalClicks);
+    }
+  });
+
+  // อัปเดตตัวเลขแบนเนอร์ด้านบนสุดด้วยยอดรวมสุทธิทั้งหมดจากประวัติศาสตร์
+  totalHitsBanner.innerHTML = `💥 โดนตีรวม ${totalDatabaseHits} ครั้ง`;
+});
+
+// --- 🗲 ชุดที่ 2: ดึงมาเฉพาะ 10 รายการล่าสุด เพื่อมาสร้างตาราง Recent Matches ด้านล่าง ---
+const recentMatchesQuery = query(whackMarPaoRef, limitToLast(10));
+
+onValue(recentMatchesQuery, (snapshot) => {
+  const historyList = document.getElementById("history-list");
+  if (!historyList) return;
+
+  if (!snapshot.exists()) {
+    historyList.innerHTML = "<div style='color: #aaa;'>No match history found.</div>";
+    return;
+  }
+
+  let htmlResult = "";
+  const recentDataList = [];
+  
+  // ตัวแปรชุดนี้จะคำนวณเฉพาะ "ผลรวมย่อย" ของ 10 เกมล่าสุดที่แสดงบนหน้าจอเท่านั้น
+  let pageScoreSum = 0;
+  let pageHitsSum = 0;
+
+  snapshot.forEach((childSnapshot) => {
+    const data = childSnapshot.val();
+    recentDataList.push(data);
+    
+    if (data.score) pageScoreSum += Number(data.score);
+    if (data.totalClicks) pageHitsSum += Number(data.totalClicks);
+  });
+
+  // พลิกแถวเพื่อให้รายการล่าสุดอยู่บนสุดของตาราง
+  recentDataList.reverse(); 
+
+  // สร้างแถวประวัติผู้เล่น 10 นัดล่าสุด
+  recentDataList.forEach((data) => {
+    const date = new Date(data.timestamp).toLocaleTimeString();
+    let weaponText = data.weapon === "hammer" ? "🛠️ ค้อน" : "⚔️ ดาบ";
+
+    htmlResult += `
+      <div style="padding: 8px 0; border-bottom: 1px solid #444; font-size: 0.9rem; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <strong>[${date}]</strong> 
+          <span style="background: rgba(255,255,255,0.15); padding: 2px 8px; border-radius: 5px; margin-left: 5px;">
+            ${weaponText}
+          </span>
+        </div>
+        <div>
+          <span style="color: #00e676; margin-right: 10px;">🏆 คะแนน: <strong>${data.score}</strong></span>
+          <span style="color: #ff9800;">💥 ตีโดน: <strong>${data.totalClicks}</strong> ครั้ง</span>
+        </div>
+      </div>
+    `;
+  });
+
+  // แนบแถวพิเศษสรุปยอดรวมย่อยของ 10 นัดล่าสุดไว้ท้ายตาราง
+  htmlResult += `
+    <div style="padding: 12px 0 4px 0; margin-top: 5px; font-size: 0.95rem; display: flex; justify-content: space-between; align-items: center; border-top: 2px dashed #888; font-weight: bold; background: rgba(255, 255, 255, 0.05); border-radius: 0 0 10px 10px;">
+      <div style="margin-left: 5px; color: #a0a0a0;">📊 ยอดรวมในหน้านี้ (Recent Total):</div>
+      <div>
+        <span style="color: #26ff91; margin-right: 10px; text-shadow: 0 0 5px rgba(38,255,145,0.4);">🏆 คะแนน: ${pageScoreSum}</span>
+        <span style="color: #ffb74d; margin-right: 5px; text-shadow: 0 0 5px rgba(255,183,77,0.4);">💥 ตีโดน: ${pageHitsSum} ครั้ง</span>
+      </div>
+    </div>
+  `;
+
+  historyList.innerHTML = htmlResult;
+});
+
+/*
 // ดึงประวัติ 10 รายการล่าสุดมาแสดงผลแบบเรียลไทม์
 const recentScoresQuery = query(whackMarPaoRef, limitToLast(10));
 onValue(recentScoresQuery, (snapshot) => {
@@ -104,3 +194,5 @@ onValue(recentScoresQuery, (snapshot) => {
 
   historyList.innerHTML = htmlResult;
 });
+
+*/
