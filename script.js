@@ -154,7 +154,15 @@ function startGame() {
       controlsPanel.style.display = "none";
       
       holes.forEach(hole => hole.classList.remove("up"));
-      
+
+      // บันทึกค่าลง Firebase Realtime Database
+      push(whackMarPaoRef, {
+    	score: score,
+    	totalClicks: totalClicks, // ค่านี้จะกลายเป็นจำนวนครั้งที่ตีโดนตามที่เราแก้ไปก่อนหน้า
+   		weapon: chosenWeapon,     // บันทึกค่าอาวุธที่ใช้ (hammer หรือ sword)
+    	timestamp: Date.now()
+      });
+		
       alert("Game Over! Final Score with " + chosenWeapon.toUpperCase() + ": " + score);
     }
   }, 1000);
@@ -256,14 +264,32 @@ onValue(recentScoresQuery, (snapshot) => {
   // สร้างโครงสร้าง HTML แสดงผล
   dataList.forEach((data) => {
     const date = new Date(data.timestamp).toLocaleTimeString();
+
+    // ตรวจสอบประเภทอาวุธเพื่อเลือกไอคอนและข้อความภาษาไทย
+     let weaponText = "";
+    if (data.weapon === "ไม้ตีสุนัข") {
+    	weaponText = "ไม้ตีสุนัข";
+    } else if (data.weapon === "ก้านมะยม") {
+    	weaponText = "ก้านมะยม";
+    } else {
+    	weaponText = data.weapon || "ไม่ได้ระบุ";
+    }
+	  
     htmlResult += `
-      <div style="padding: 5px 0; border-bottom: 1px solid #444; font-size: 0.9rem;">
-        <strong>[${date}]</strong> อาวุธ: ${data.weapon} | 
-        <span style="color: #00e676;">คะแนน: ${data.score}</span> | 
-        <span style="color: #ff9800;">ตีโดน: ${data.totalClicks} ครั้ง</span>  <!-- แก้คำตรงนี้ -->
+    <div style="padding: 8px 0; border-bottom: 1px solid #444; font-size: 0.9rem; display: flex; justify-content: space-between; align-items: center;">
+      <div>
+        <strong>[${date}]</strong> 
+        <span style="background: rgba(255,255,255,0.15); padding: 2px 8px; border-radius: 5px; margin-left: 5px;">
+          ${weaponText}
+        </span>
       </div>
-    `;
-  });
+      <div>
+        <span style="color: #00e676; margin-right: 10px;">🏆 คะแนน: <strong>${data.score}</strong></span>
+        <span style="color: #ff9800;">💥 ตีโดน: <strong>${data.totalClicks}</strong> ครั้ง</span>
+      </div>
+    </div>
+  `;
+});
 
   historyList.innerHTML = htmlResult;
 });
