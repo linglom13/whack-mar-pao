@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>เกมตีผีหมาเป๋าเปี๊ยก</title>
+  <!-- Link to the external CSS styling file -->
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+
+<!-- Add this hidden audio player inside your body tag -->
+<audio id="hit1-sound" src="audio/hit1.mp3" preload="auto"></audio>
+<audio id="hit2-sound" src="audio/hit2.mp3" preload="auto"></audio>
+<audio id="hit3-sound" src="audio/hit3.mp3" preload="auto"></audio>
+
+  <!-- Floating custom weapon element -->
+  <div id="weapon-element" class="game-weapon"></div>
+
+  <h1>เกมตีผีหมาเป๋าเปี๊ยก</h1>
+
+  <!-- Setup Menu Options Matrix -->
+  <div id="setup-panel" class="setup-panel">
+    <h2>เลือกอาวุธ</h2>
+    <div class="weapon-options">
+      <div class="weapon-card selected" onclick="selectWeapon('ไม้ตีสุนัข', this)">
+        <img src="images/stick1.png" alt="ไม้ตีสุนัข">
+        <div>ไม้ตีสุนัข</div>
+        <span>+1 คะแนน</span>
+      </div>
+	  <div class="weapon-card" onclick="selectWeapon('ก้านมะยม', this)">
+        <img src="images/stick2.png" alt="ก้านมะยม">
+        <div>ก้านมะยม</div>
+        <span>+2 คะแนน</span>
+      </div>
+      <div class="weapon-card" onclick="selectWeapon('ไม้กวาด', this)">
+        <img src="images/broom.png" alt="ไม้กวาด">
+        <div>ไม้กวาด</div>
+        <span>+3  คะแนน</span>
+      </div>
+    </div>
+    <button class="start-btn" onclick="startGame()">Battle Start!</button>
+  </div>
+
+  <!-- In-Game Stats HUD Panel -->
+  <div id="controls-panel" class="controls">
+    <div class="score-board">Score: <span id="score">0</span></div>
+    <div class="score-board">Time Left: <span id="time-left">20</span>s</div>
+	
+	<button class="back-btn" onclick="resetToMenu()" style="background-color: #f44336; margin-left: 15px; padding: 8px 18px; font-size: 1rem; border-radius: 15px; cursor: pointer;">↩ Back to Menu</button>
+  </div>
+
+  <!-- Main Game Board Grid Layout -->
+  <div class="game-board" id="board">
+    <div class="hole"><div class="mole"></div></div>
+    <div class="hole"><div class="mole"></div></div>
+    <div class="hole"><div class="mole"></div></div>
+    <div class="hole"><div class="mole"></div></div>
+    <div class="hole"><div class="mole"></div></div>
+    <div class="hole"><div class="mole"></div></div>
+  </div>
+
+  <!-- Link to the external JavaScript game logic engine -->
+  <script src="script.js"></script>
+</body>
+</html>

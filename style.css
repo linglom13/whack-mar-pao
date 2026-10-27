@@ -1,0 +1,203 @@
+body {
+  font-family: 'Arial', sans-serif;
+  /*background-image: url('images/grass.png');
+  background-repeat: repeat; */
+  
+  background: radial-gradient(circle at 50% 50%, #2c1654 0%, #170d30 50%, #05020c 100%);
+            
+  color: white;
+  text-align: center;
+  margin: 0;
+  padding: 20px;
+  user-select: none;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Hide standard system cursor over the viewport layout during gameplay */
+body.game-active, 
+body.game-active .game-board, 
+body.game-active .hole, 
+body.game-active .mole {
+  cursor: none !important;
+}
+
+/* Floating Weapon Element Setup */
+.game-weapon {
+  position: fixed;
+  width: 64px;
+  height: 64px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  pointer-events: none; 
+  z-index: 9999;
+  display: none; 
+  transform: translate(-20px, -45px); 
+  transition: transform 0.05s ease;
+}
+
+/* Stick1 rotation animation frame */
+body.game-active.weapon-ไม้ตีสุนัข:active .game-weapon {
+	transform-origin: bottom center;
+	transform: translate(-20px, -45px) rotate(-60deg) scale(1.2);
+}
+
+
+/* Stick2 striking rotation animation frame */
+body.game-active.weapon-ก้านมะยม:active .game-weapon {
+	transform: translate(20px, 45px) rotate(65deg);
+}
+
+/* Sword slashing rotation animation frame */
+body.game-active.weapon-ไม้กวาด:active .game-weapon {
+  transform: translate(-20px, -45px) rotate(-90deg) scale(1.2);
+}
+
+h1 {
+  margin-bottom: 10px;
+  font-size: 3rem;
+  text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8);
+}
+
+/* Weapons Setup Selection Screen Interface */
+.setup-panel {
+  background: rgba(0, 0, 0, 0.85);
+  border: 3px solid #ff9800;
+  padding: 25px;
+  border-radius: 20px;
+  display: inline-block;
+  margin-bottom: 20px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+.weapon-options {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.weapon-card {
+  background: #333;
+  border: 3px solid #666;
+  border-radius: 12px;
+  padding: 15px;
+  cursor: pointer;
+  width: 120px;
+  transition: all 0.2s ease;
+}
+
+.weapon-card:hover {
+  border-color: #ff9800;
+  transform: translateY(-2px);
+}
+
+.weapon-card.selected {
+  border-color: #00e676;
+  background: #1b5e20;
+  box-shadow: 0 0 15px #00e676;
+}
+
+.weapon-card img {
+  width: 50px;
+  height: 50px;
+  margin-bottom: 8px;
+}
+
+.weapon-card div {
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.weapon-card span {
+  font-size: 0.75rem;
+  color: #bbb;
+  display: block;
+  margin-top: 4px;
+}
+
+.controls {
+  margin-bottom: 20px;
+  display: none; 
+}
+
+.score-board {
+  font-size: 1.5rem;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 10px 20px;
+  border-radius: 20px;
+  display: inline-block;
+  margin: 0 10px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+.start-btn {
+  background-color: #00e676;
+  color: black;
+  border: none;
+  padding: 14px 35px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  border-radius: 30px;
+  cursor: pointer;
+  box-shadow: 0 4px #00c853;
+  margin-top: 10px;
+}
+
+.start-btn:active {
+  box-shadow: 0 0 #00c853;
+  transform: translateY(4px);
+}
+
+/* Grid Arena Framework Configuration */
+.game-board {
+  width: 600px;
+  height: 400px;
+  margin: 20px auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  gap: 30px;
+  opacity: 0.4;
+  pointer-events: none; 
+}
+
+.game-board.playable {
+  opacity: 1;
+}
+
+.hole {
+  position: relative;
+  overflow: hidden; 
+  background: #4a3026;
+  border-radius: 50% / 30%;
+  border: 6px solid #2b1c16;
+  box-shadow: inset 0 12px 0 rgba(0,0,0,0.7), 0 8px 15px rgba(0,0,0,0.5);
+}
+
+.mole {
+  position: absolute;
+  left: 15%;
+  bottom: -100%; 
+  width: 70%;
+  height: 95%;
+  background-size: cover;
+  background-position: center;
+  border-radius: 50% 50% 0 0; 
+  transition: bottom 0.12s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+  pointer-events: none; 
+}
+
+.hole.up .mole {
+  bottom: -5%;
+  pointer-events: auto; 
+}
+
+/* Responsive viewports adjustments layout */
+@media (max-width: 650px) {
+  .game-board {
+    width: 90vw;
+    height: 80vw;
+    gap: 15px;
+  }
+}
