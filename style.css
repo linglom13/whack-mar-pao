@@ -53,14 +53,6 @@ body.game-active.weapon-ไม้กวาด:active .game-weapon, body.game-act
   transform: translate(-20px, -45px) rotate(-90deg) scale(1.2);
 }
 
-/* Sword slashing rotation animation frame */
-body.game-active.weapon-ก้านมะยม:active #weapon-element,
-body.game-active.weapon-ก้านมะยม.striking #weapon-element {
-  -webkit-transform: translate(20px, 45px) rotate(45deg);
-  transform: translate(20px, 45px) rotate(45deg);
-  -webkit-animation-delay: 0.01s; /* Safari DOM injection fix */
-}
-
 h1 {
   margin-bottom: 10px;
   font-size: 3rem;
