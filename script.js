@@ -65,7 +65,7 @@ let score = 0;
 let totalClicks = 0; // ตัวแปรเก็บจำนวนครั้งที่ตีทั้งหมดในรอบนั้น
 let countdown;
 let peepTimeout;
-let timeLeft = 20;
+let timeLeft = 10;
 let currentMoleConfig = null;
 
 // Track custom graphic movement inline with real hardware engine tracking coordinate states
