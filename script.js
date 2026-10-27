@@ -1,3 +1,6 @@
+// Add this line at the top of script.js to unlock Safari touch states
+document.addEventListener("touchstart", function() {}, false);
+
 const holes = document.querySelectorAll(".hole");
 const scoreBoard = document.getElementById("score");
 const timeLeftDisplay = document.getElementById("time-left");
@@ -180,7 +183,10 @@ function bonk(e) {
 	
   score += weaponAssets[chosenWeapon].points;
   scoreBoard.textContent = score;
-  
+
+  document.body.classList.add("striking");
+  setTimeout(() => document.body.classList.remove("striking"), 150);
+	
   if (chosenWeapon === "ไม้ตีสุนัข") {
 		this.style.backgroundImage = "url('" + this.dataset.stick1Url + "')";
 
