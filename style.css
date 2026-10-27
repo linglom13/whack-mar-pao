@@ -37,19 +37,19 @@ body.game-active .mole {
 }
 
 /* Stick1 rotation animation frame */
-body.game-active.weapon-ไม้ตีสุนัข:active .game-weapon {
+body.game-active.weapon-ไม้ตีสุนัข:active .game-weapon, body.game-active.weapon-ไม้ตีสุนัข.striking .game-weapon {
 	transform-origin: bottom center;
 	transform: translate(-20px, -45px) rotate(-60deg) scale(1.2);
 }
 
 
 /* Stick2 striking rotation animation frame */
-body.game-active.weapon-ก้านมะยม:active .game-weapon {
+body.game-active.weapon-ก้านมะยม:active .game-weapon, body.game-active.weapon-ก้านมะยม.striking .game-weapon {
 	transform: translate(20px, 45px) rotate(65deg);
 }
 
 /* Sword slashing rotation animation frame */
-body.game-active.weapon-ไม้กวาด:active .game-weapon {
+body.game-active.weapon-ไม้กวาด:active .game-weapon, body.game-active.weapon-ไม้กวาด.striking .game-weapon {
   transform: translate(-20px, -45px) rotate(-90deg) scale(1.2);
 }
 
