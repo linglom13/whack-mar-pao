@@ -74,16 +74,6 @@ window.addEventListener("mousemove", (e) => {
   weaponElement.style.top = e.clientY + 'px';
 });
 
-// นับจำนวนครั้งที่ผู้เล่นเหวี่ยงอาวุธตี (ไม่ว่าจะโดนตุ่นหรือไม่ก็ตาม)
-window.addEventListener("click", (e) => {
-  if (document.body.classList.contains("game-active") && e.isTrusted) {
-    // ป้องกันการนับเบิ้ลหากกดโดนปุ่ม Back
-    if (!e.target.classList.contains("back-btn")) {
-      totalClicks++;
-    }
-  }
-});
-
 function selectWeapon(weaponType, element) {
   chosenWeapon = weaponType;
   document.querySelectorAll(".weapon-card").forEach(card => card.classList.remove("selected"));
@@ -201,7 +191,9 @@ window.resetToMenu = resetToMenu; // เปิดให้ HTML เรียก�
 
 function bonk(e) {
   if(!e.isTrusted) return; 
-  
+
+  totalClicks++; 
+	
   score += weaponAssets[chosenWeapon].points;
   scoreBoard.textContent = score;
   
@@ -268,7 +260,7 @@ onValue(recentScoresQuery, (snapshot) => {
       <div style="padding: 5px 0; border-bottom: 1px solid #444; font-size: 0.9rem;">
         <strong>[${date}]</strong> อาวุธ: ${data.weapon} | 
         <span style="color: #00e676;">คะแนน: ${data.score}</span> | 
-        <span style="color: #ff9800;">จำนวนที่ตี: ${data.totalClicks}</span>
+        <span style="color: #ff9800;">ตีโดน: ${data.totalClicks} ครั้ง</span>  <!-- แก้คำตรงนี้ -->
       </div>
     `;
   });
