@@ -1,6 +1,31 @@
 // Add this line at the top of script.js to unlock Safari touch states
 document.addEventListener("touchstart", function() {}, false);
 
+// --- IMAGE PRELOADING CODE ---
+const imagesToPreload = [
+  'images/mole1.png', 
+  'images/mole1-hit-stick1.png', 
+  'images/mole1-hit-stick2.png',
+  'images/mole1-hit-broom.png',
+  'images/mole2.png', 
+  'images/mole2-hit-stick1.png', 
+  'images/mole2-hit-stick2.png',
+  'images/mole2-hit-broom.png',
+  'images/mole3.png', 
+  'images/mole3-hit-stick1.png', 
+  'images/mole3-hit-stick2.png',
+  'images/mole3-hit-broom.png',
+  'images/mole4.png', 
+  'images/mole4-hit-stick1.png', 
+  'images/mole4-hit-stick2.png',
+  'images/mole4-hit-broom.png'
+];
+
+imagesToPreload.forEach(src => {
+  const img = new Image();
+  img.src = src;
+});
+
 // 🛠️ 1. Create a dictionary map to store all three decoded audio buffers
 const gameAudioBuffers = {
   ไม้ตีสุนัข: null,
