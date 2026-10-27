@@ -31,13 +31,12 @@ window.saveMatchHistory = function(finalScore, hitCount, weaponType) {
 const recentScoresQuery = query(whackMarPaoRef, limitToLast(10));
 onValue(recentScoresQuery, (snapshot) => {
   const historyList = document.getElementById("history-list");
+  const totalHitsBanner = document.getElementById("total-hits-banner");
   if (!historyList) return;
 
   if (!snapshot.exists()) {
     historyList.innerHTML = "<div style='color: #aaa;'>No match history found.</div>";
-    // 🛠️ ถ้ายังไม่มีประวัติ ให้แสดงเป็น 0 ครั้งไปก่อน
-    const totalHitsBanner = document.getElementById("total-hits-banner");
-    if (totalHitsBanner) totalHitsBanner.textContent = "💥 โดนตีรวม 0 ครั้ง";
+    if (totalHitsBanner) totalHitsBanner.innerHTML = "💥 โดนตีรวม 0 ครั้ง";
     return;
   }
 
@@ -57,8 +56,7 @@ onValue(recentScoresQuery, (snapshot) => {
     if (data.totalClicks) aggregateHits += Number(data.totalClicks);
   });
 
-  // 🛠️ เพิ่มบรรทัดชุดนี้เข้าไป: เพื่อส่งค่าจำนวนครั้งรวมไปแสดงใต้ <h1> บนหน้าแรก
-  const totalHitsBanner = document.getElementById("total-hits-banner");
+  
   if (totalHitsBanner) {
     totalHitsBanner.innerHTML = `💥 โดนตีรวม ${aggregateHits} ครั้ง`;
   }
