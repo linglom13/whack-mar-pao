@@ -146,10 +146,6 @@ let peepTimeout;
 let timeLeft = 10;
 let currentMoleConfig = null;
 
-let currentCombo = 0;
-const comboBanner = document.getElementById("combo-banner");
-const comboCountDisplay = document.getElementById("combo-count");
-
 // Track custom graphic movement inline with real hardware engine tracking coordinate states
 window.addEventListener("mousemove", (e) => {
   weaponElement.style.left = e.clientX + "px";
@@ -207,9 +203,6 @@ function startGame() {
   timeLeft = 10;
   timeUp = false;
 
-  currentCombo = 0;
-  if (comboBanner) comboBanner.style.display = "none";
-	
   scoreBoard.textContent = score;
   timeLeftDisplay.textContent = timeLeft;
   
@@ -253,10 +246,6 @@ window.startGame = startGame; // เปิดให้ HTML เรียกใ�
 
 // ---> ADD THIS FUNCTION ANYWHERE IN SCRIPT.JS <---
 function resetToMenu() {
-
-  currentCombo = 0;
-  if (comboBanner) comboBanner.style.display = "none";
-	
   // 1. Force halt all active game loops and timers
   clearInterval(countdown);
   clearTimeout(peepTimeout);
@@ -285,32 +274,12 @@ window.resetToMenu = resetToMenu; // เปิดให้ HTML เรียก�
 
 function bonk(e) {
   if(!e.isTrusted) return; 
-
-  e.stopPropagation(); 
 	
   totalClicks++; 
 
-	// 🔥 Increment combo counter
-    currentCombo++;
-    
-    // 🔥 Dynamic Scoring Matrix: Grant an extra +1 point for every 5 consecutive hits achieved
-    const comboBonus = Math.floor(currentCombo / 5);
-    score += weaponAssets[chosenWeapon].points + comboBonus;
-    scoreBoard.textContent = score;
+  document.body.classList.add("striking");
 
-    // 🔥 Trigger the combo banner UI panel configurations
-    if (currentCombo >= 2) {
-        comboBanner.style.display = "inline-block";
-        comboCountDisplay.textContent = currentCombo;
-        // Flash animation effect
-        comboBanner.classList.remove("combo-pop");
-        void comboBanner.offsetWidth; // Force CSS reflow
-        comboBanner.classList.add("combo-pop");
-    }
-
-    document.body.classList.add("striking");
-    // Rest of your existing bonk structure (sound routing, background swapping, timers)...
-	
+  score += weaponAssets[chosenWeapon].points;
   scoreBoard.textContent = score;
 
   document.body.classList.add("striking");
@@ -357,33 +326,3 @@ function bonk(e) {
 }
 
 moles.forEach(mole => mole.addEventListener("click", bonk));
-
-
-// Handles missed clicks on the arena canvas background
-gameBoard.addEventListener("click", function(e) {
-    // If the click hit an active mole, ignore entirely (bonk function handles it)
-    if (e.target.classList.contains("mole")) return;
-    
-    // Only trigger a visible alert banner if the player had a running streak active
-    if (currentCombo >= 2) {
-        const breakAlert = document.getElementById("combo-break-alert");
-        if (breakAlert) {
-            breakAlert.style.visibility = "visible";
-            
-            if (window.breakAlertTimeout) clearTimeout(window.breakAlertTimeout);
-            
-            window.breakAlertTimeout = setTimeout(() => {
-                breakAlert.style.visibility = "hidden";
-            }, 800);
-        }
-    }
-    
-    // 🔥 Missed click! Reset combo streak completely
-    currentCombo = 0;
-    if (comboBanner) {
-        comboBanner.style.display = "none";
-    }
-});
-
-
-
