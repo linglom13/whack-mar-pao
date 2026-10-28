@@ -143,7 +143,7 @@ let score = 0;
 let totalClicks = 0; // ตัวแปรเก็บจำนวนครั้งที่ตีทั้งหมดในรอบนั้น
 let countdown;
 let peepTimeout;
-let timeLeft = 10;
+let timeLeft = 12;
 let currentMoleConfig = null;
 
 // Track custom graphic movement inline with real hardware engine tracking coordinate states
@@ -200,7 +200,7 @@ function peep() {
 function startGame() {
   score = 0;
   totalClicks = 0; // รีเซ็ตจำนวนครั้งที่ตี
-  timeLeft = 10;
+  timeLeft = 12;
   timeUp = false;
 
   scoreBoard.textContent = score;
@@ -254,7 +254,7 @@ function resetToMenu() {
   // 2. Clear out game state tracking data sets
   score = 0;
   totalClicks = 0;
-  timeLeft = 10;
+  timeLeft = 12;
   scoreBoard.textContent = score;
   timeLeftDisplay.textContent = timeLeft;
 
