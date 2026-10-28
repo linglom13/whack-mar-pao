@@ -356,3 +356,17 @@ function bonk(e) {
 }
 
 moles.forEach(mole => mole.addEventListener("click", bonk));
+
+
+// Append this tracking sequence to the very bottom of script.js
+gameBoard.addEventListener("click", function(e) {
+    // If the click hit a mole, ignore (bonk handles it)
+    if (e.target.classList.contains("mole")) return;
+    
+    // 🔥 Missed click! Reset combo streak
+    currentCombo = 0;
+    if (comboBanner) {
+        comboBanner.style.display = "none";
+    }
+});
+
