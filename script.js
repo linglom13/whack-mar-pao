@@ -18,7 +18,11 @@ const imagesToPreload = [
   'images/mole4.png', 
   'images/mole4-hit-stick1.png', 
   'images/mole4-hit-stick2.png',
-  'images/mole4-hit-broom.png'
+  'images/mole4-hit-broom.png',
+  'images/mole5.png', 
+  'images/mole5-hit-stick1.png', 
+  'images/mole5-hit-stick2.png',
+  'images/mole5-hit-broom.png'
 ];
 
 imagesToPreload.forEach(src => {
@@ -115,6 +119,12 @@ const moleTypes = [
 	hitStick1: 'images/mole4-hit-stick1.png',
 	hitStick2: 'images/mole4-hit-stick2.png',
 	hitBroom: 'images/mole4-hit-broom.png'
+  },
+  {
+	normal: 'images/mole5.png',
+	hitStick1: 'images/mole5-hit-stick1.png',
+	hitStick2: 'images/mole5-hit-stick2.png',
+	hitBroom: 'images/mole5-hit-broom.png'
   }
 	
 ];
