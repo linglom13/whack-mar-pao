@@ -146,6 +146,10 @@ let peepTimeout;
 let timeLeft = 10;
 let currentMoleConfig = null;
 
+let currentCombo = 0;
+const comboBanner = document.getElementById("combo-banner");
+const comboCountDisplay = document.getElementById("combo-count");
+
 // Track custom graphic movement inline with real hardware engine tracking coordinate states
 window.addEventListener("mousemove", (e) => {
   weaponElement.style.left = e.clientX + "px";
@@ -202,7 +206,10 @@ function startGame() {
   totalClicks = 0; // รีเซ็ตจำนวนครั้งที่ตี
   timeLeft = 10;
   timeUp = false;
-  
+
+  currentCombo = 0;
+  if (comboBanner) comboBanner.style.display = "none";
+	
   scoreBoard.textContent = score;
   timeLeftDisplay.textContent = timeLeft;
   
@@ -246,6 +253,10 @@ window.startGame = startGame; // เปิดให้ HTML เรียกใ�
 
 // ---> ADD THIS FUNCTION ANYWHERE IN SCRIPT.JS <---
 function resetToMenu() {
+
+  currentCombo = 0;
+  if (comboBanner) comboBanner.style.display = "none";
+	
   // 1. Force halt all active game loops and timers
   clearInterval(countdown);
   clearTimeout(peepTimeout);
@@ -276,6 +287,27 @@ function bonk(e) {
   if(!e.isTrusted) return; 
 
   totalClicks++; 
+
+	// 🔥 Increment combo counter
+    currentCombo++;
+    
+    // 🔥 Dynamic Scoring Matrix: Grant an extra +1 point for every 5 consecutive hits achieved
+    const comboBonus = Math.floor(currentCombo / 5);
+    score += weaponAssets[chosenWeapon].points + comboBonus;
+    scoreBoard.textContent = score;
+
+    // 🔥 Trigger the combo banner UI panel configurations
+    if (currentCombo >= 2) {
+        comboBanner.style.display = "inline-block";
+        comboCountDisplay.textContent = currentCombo;
+        // Flash animation effect
+        comboBanner.classList.remove("combo-pop");
+        void comboBanner.offsetWidth; // Force CSS reflow
+        comboBanner.classList.add("combo-pop");
+    }
+
+    document.body.classList.add("striking");
+    // Rest of your existing bonk structure (sound routing, background swapping, timers)...
 	
   score += weaponAssets[chosenWeapon].points;
   scoreBoard.textContent = score;
