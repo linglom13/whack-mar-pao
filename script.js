@@ -309,7 +309,6 @@ function bonk(e) {
     document.body.classList.add("striking");
     // Rest of your existing bonk structure (sound routing, background swapping, timers)...
 	
-  score += weaponAssets[chosenWeapon].points;
   scoreBoard.textContent = score;
 
   document.body.classList.add("striking");
@@ -358,15 +357,32 @@ function bonk(e) {
 moles.forEach(mole => mole.addEventListener("click", bonk));
 
 
-// Append this tracking sequence to the very bottom of script.js
+// Handles missed clicks on the arena canvas background
 gameBoard.addEventListener("click", function(e) {
-    // If the click hit a mole, ignore (bonk handles it)
+    // If the click hit a mole, ignore (bonk function handles it)
     if (e.target.classList.contains("mole")) return;
     
-    // 🔥 Missed click! Reset combo streak
+    // Only trigger a break if the player actually had an active streak going
+    if (currentCombo >= 2) {
+        const breakAlert = document.getElementById("combo-break-alert");
+        if (breakAlert) {
+            breakAlert.style.visibility = "visible";
+            
+            // Clear any lingering hide timers to prevent flickering on rapid misses
+            if (window.breakAlertTimeout) clearTimeout(window.breakAlertTimeout);
+            
+            // Automatically hide the message after 800ms
+            window.breakAlertTimeout = setTimeout(() => {
+                breakAlert.style.visibility = "hidden";
+            }, 800);
+        }
+    }
+    
+    // 🔥 Missed click! Reset combo streak completely
     currentCombo = 0;
     if (comboBanner) {
         comboBanner.style.display = "none";
     }
 });
+
 
