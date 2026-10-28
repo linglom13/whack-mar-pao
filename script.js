@@ -163,8 +163,8 @@ function randomHole(holesList) {
 }
 
 function peep() {
-  const minTime = (chosenWeapon === "sword") ? 450 : 600;
-  const maxTime = (chosenWeapon === "sword") ? 900 : 1100;
+  const minTime = (chosenWeapon === "ไม้กวาด") ? 450 : 600;
+  const maxTime = (chosenWeapon === "ไม้กวาด") ? 900 : 1100;
   
   const time = randomTime(minTime, maxTime); 
   const hole = randomHole(holes);
@@ -305,7 +305,7 @@ function bonk(e) {
   }
   
   this.style.pointerEvents = "none";
-  const pullDownDelay = (chosenWeapon === "sword") ? 150 : 300;
+  const pullDownDelay = (chosenWeapon === "ไม้กวาด") ? 150 : 300;
   
   setTimeout(() => {
     this.parentNode.classList.remove('up');
