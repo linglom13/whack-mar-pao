@@ -286,6 +286,8 @@ window.resetToMenu = resetToMenu; // เปิดให้ HTML เรียก�
 function bonk(e) {
   if(!e.isTrusted) return; 
 
+  e.stopPropagation(); 
+	
   totalClicks++; 
 
 	// 🔥 Increment combo counter
@@ -359,19 +361,17 @@ moles.forEach(mole => mole.addEventListener("click", bonk));
 
 // Handles missed clicks on the arena canvas background
 gameBoard.addEventListener("click", function(e) {
-    // If the click hit a mole, ignore (bonk function handles it)
+    // If the click hit an active mole, ignore entirely (bonk function handles it)
     if (e.target.classList.contains("mole")) return;
     
-    // Only trigger a break if the player actually had an active streak going
+    // Only trigger a visible alert banner if the player had a running streak active
     if (currentCombo >= 2) {
         const breakAlert = document.getElementById("combo-break-alert");
         if (breakAlert) {
             breakAlert.style.visibility = "visible";
             
-            // Clear any lingering hide timers to prevent flickering on rapid misses
             if (window.breakAlertTimeout) clearTimeout(window.breakAlertTimeout);
             
-            // Automatically hide the message after 800ms
             window.breakAlertTimeout = setTimeout(() => {
                 breakAlert.style.visibility = "hidden";
             }, 800);
@@ -384,5 +384,6 @@ gameBoard.addEventListener("click", function(e) {
         comboBanner.style.display = "none";
     }
 });
+
 
 
